@@ -15,7 +15,7 @@ resource "aws_api_gateway_integration" "integration" {
   type        = "MOCK"
 
   request_templates = {
-    "application/json" : jsondecode({
+    "application/json" = jsonencode({
       statusCode : "200"
     })
   }
