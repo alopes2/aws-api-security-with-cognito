@@ -1,23 +1,16 @@
 resource "aws_api_gateway_rest_api" "api" {
   name = "my-api"
 }
-
-resource "aws_api_gateway_resource" "resource" {
-  parent_id   = aws_api_gateway_rest_api.api.root_resource_id
-  path_part   = "/"
-  rest_api_id = aws_api_gateway_rest_api.api.id
-}
-
 resource "aws_api_gateway_method" "method" {
   authorization = "NONE"
   http_method   = "GET"
-  resource_id   = aws_api_gateway_resource.resource.id
+  resource_id   = aws_api_gateway_rest_api.api.root_resource_id
   rest_api_id   = aws_api_gateway_rest_api.api.id
 }
 
 resource "aws_api_gateway_integration" "integration" {
   http_method = aws_api_gateway_method.method.http_method
-  resource_id = aws_api_gateway_resource.resource.id
+  resource_id = aws_api_gateway_rest_api.api.root_resource_id
   rest_api_id = aws_api_gateway_rest_api.api.id
   type        = "MOCK"
 }
@@ -34,7 +27,7 @@ resource "aws_api_gateway_deployment" "deployment" {
     #       resources will show a difference after the initial implementation.
     #       It will stabilize to only change when resources change afterwards.
     redeployment = sha1(jsonencode([
-      aws_api_gateway_resource.resource.id,
+      aws_api_gateway_rest_api.api.root_resource_id,
       aws_api_gateway_method.method.id,
       aws_api_gateway_integration.integration.id,
     ]))
