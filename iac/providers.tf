@@ -7,8 +7,8 @@ terraform {
   }
 
   backend "s3" {
-    bucket = "YOUR_BUCKET"
-    key    = "state.tfstate"
+    bucket = "terraform-medium-api-notification"
+    key    = "api-security-with-cognito/state.tfstate"
   }
 }
 
